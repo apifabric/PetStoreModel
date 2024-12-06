@@ -1,0 +1,90 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Address: Customer addresses
+Category: Categories to which pets belong
+Customer: Customers who purchase pets
+Inventory: Inventory with quantities by status
+Order: Orders placed in the store
+Pet: Stores pets available in the store
+PetTag: Association table for pets and tags
+Tag: Tags associated with pets
+User: Users who can perform operations
+'''
+}
+
+Table Address {
+    id INTEGER [primary key]
+    street VARCHAR 
+    city VARCHAR 
+    state VARCHAR 
+    zip VARCHAR 
+    }
+
+Table Category {
+    id INTEGER [primary key]
+    name VARCHAR 
+    }
+
+Table Customer {
+    id INTEGER [primary key]
+    username VARCHAR 
+    address_id INTEGER 
+    }
+
+Table Inventory {
+    id INTEGER [primary key]
+    status VARCHAR 
+    quantity INTEGER 
+    }
+
+Table Order {
+    id INTEGER [primary key]
+    pet_id INTEGER 
+    quantity INTEGER 
+    ship_date DATETIME 
+    status VARCHAR(9) 
+    complete BOOLEAN 
+    }
+
+Table Pet {
+    id INTEGER [primary key]
+    name VARCHAR 
+    category_id INTEGER 
+    photo_urls VARCHAR 
+    status VARCHAR(9) 
+    }
+
+Table PetTag {
+    id INTEGER [primary key]
+    pet_id INTEGER 
+    tag_id INTEGER 
+    }
+
+Table Tag {
+    id INTEGER [primary key]
+    name VARCHAR 
+    }
+
+Table User {
+    id INTEGER [primary key]
+    username VARCHAR 
+    first_name VARCHAR 
+    last_name VARCHAR 
+    email VARCHAR 
+    password VARCHAR 
+    phone VARCHAR 
+    user_status INTEGER 
+    }
+
+
+
+// Relationships
+    Ref: Customer.(address_id) < Address.(id)
+    Ref: Order.(pet_id) < Pet.(id)
+    Ref: Pet.(category_id) < Category.(id)
+    Ref: PetTag.(pet_id) < Pet.(id)
+    Ref: PetTag.(tag_id) < Tag.(id)

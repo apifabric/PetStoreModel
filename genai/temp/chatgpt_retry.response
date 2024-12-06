@@ -1,0 +1,217 @@
+{
+    "models": [
+        {
+            "classname": "Pet",
+            "code": "class Pet(Base):\n    \"\"\"\n    description: Stores pets available in the store\n    \"\"\"\n    __tablename__ = 'pet'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    category_id = Column(Integer, ForeignKey('category.id'))\n    photo_urls = Column(String)  # Designed to store a string representation of URLs\n    status = Column(Enum('available', 'pending', 'sold'))",
+            "sqlite_create": "CREATE TABLE pet (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    name TEXT NOT NULL,\n    category_id INTEGER,\n    photo_urls TEXT,\n    status TEXT CHECK(status IN ('available', 'pending', 'sold'))\n);",
+            "description": "Stores pets available in the store",
+            "name": "pet"
+        },
+        {
+            "classname": "Category",
+            "code": "class Category(Base):\n    \"\"\"\n    description: Categories to which pets belong\n    \"\"\"\n    __tablename__ = 'category'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)",
+            "sqlite_create": "CREATE TABLE category (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    name TEXT\n);",
+            "description": "Categories to which pets belong",
+            "name": "category"
+        },
+        {
+            "classname": "Tag",
+            "code": "class Tag(Base):\n    \"\"\"\n    description: Tags associated with pets\n    \"\"\"\n    __tablename__ = 'tag'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)",
+            "sqlite_create": "CREATE TABLE tag (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    name TEXT\n);",
+            "description": "Tags associated with pets",
+            "name": "tag"
+        },
+        {
+            "classname": "PetTag",
+            "code": "class PetTag(Base):\n    \"\"\"\n    description: Association table for pets and tags\n    \"\"\"\n    __tablename__ = 'pet_tag'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    pet_id = Column(Integer, ForeignKey('pet.id'))\n    tag_id = Column(Integer, ForeignKey('tag.id'))",
+            "sqlite_create": "CREATE TABLE pet_tag (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    pet_id INTEGER REFERENCES pet(id),\n    tag_id INTEGER REFERENCES tag(id)\n);",
+            "description": "Association table for pets and tags",
+            "name": "pet_tag"
+        },
+        {
+            "classname": "Order",
+            "code": "class Order(Base):\n    \"\"\"\n    description: Orders placed in the store\n    \"\"\"\n    __tablename__ = 'order'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    pet_id = Column(Integer, ForeignKey('pet.id'))\n    quantity = Column(Integer)\n    ship_date = Column(DateTime)\n    status = Column(Enum('placed', 'approved', 'delivered'))\n    complete = Column(Boolean)",
+            "sqlite_create": "CREATE TABLE order (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    pet_id INTEGER REFERENCES pet(id),\n    quantity INTEGER,\n    ship_date DATETIME,\n    status TEXT CHECK(status IN ('placed', 'approved', 'delivered')),\n    complete BOOLEAN\n);",
+            "description": "Orders placed in the store",
+            "name": "order"
+        },
+        {
+            "classname": "Customer",
+            "code": "class Customer(Base):\n    \"\"\"\n    description: Customers who purchase pets\n    \"\"\"\n    __tablename__ = 'customer'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    username = Column(String)\n    address_id = Column(Integer, ForeignKey('address.id'))",
+            "sqlite_create": "CREATE TABLE customer (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    username TEXT,\n    address_id INTEGER REFERENCES address(id)\n);",
+            "description": "Customers who purchase pets",
+            "name": "customer"
+        },
+        {
+            "classname": "Address",
+            "code": "class Address(Base):\n    \"\"\"\n    description: Customer addresses\n    \"\"\"\n    __tablename__ = 'address'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    street = Column(String)\n    city = Column(String)\n    state = Column(String)\n    zip = Column(String)",
+            "sqlite_create": "CREATE TABLE address (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    street TEXT,\n    city TEXT,\n    state TEXT,\n    zip TEXT\n);",
+            "description": "Customer addresses",
+            "name": "address"
+        },
+        {
+            "classname": "User",
+            "code": "class User(Base):\n    \"\"\"\n    description: Users who can perform operations\n    \"\"\"\n    __tablename__ = 'user'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    username = Column(String)\n    first_name = Column(String)\n    last_name = Column(String)\n    email = Column(String)\n    password = Column(String)\n    phone = Column(String)\n    user_status = Column(Integer)",
+            "sqlite_create": "CREATE TABLE user (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    username TEXT,\n    first_name TEXT,\n    last_name TEXT,\n    email TEXT,\n    password TEXT,\n    phone TEXT,\n    user_status INTEGER\n);",
+            "description": "Users who can perform operations",
+            "name": "user"
+        },
+        {
+            "classname": "Inventory",
+            "code": "class Inventory(Base):\n    \"\"\"\n    description: Inventory with quantities by status\n    \"\"\"\n    __tablename__ = 'inventory'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    status = Column(String)\n    quantity = Column(Integer)",
+            "sqlite_create": "CREATE TABLE inventory (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    status TEXT,\n    quantity INTEGER\n);",
+            "description": "Inventory with quantities by status",
+            "name": "inventory"
+        }
+    ],
+    "rules": [],
+    "test_data": "Below are the individual test data row definitions for each table.",
+    "test_data_rows": [
+        {
+            "test_data_row_variable": "pet1",
+            "code": "pet1 = Pet(id=1, name=\"Buddy\", category_id=1, photo_urls=\"url1\", status=\"available\")"
+        },
+        {
+            "test_data_row_variable": "pet2",
+            "code": "pet2 = Pet(id=2, name=\"Kitty\", category_id=2, photo_urls=\"url2\", status=\"pending\")"
+        },
+        {
+            "test_data_row_variable": "pet3",
+            "code": "pet3 = Pet(id=3, name=\"Bruno\", category_id=1, photo_urls=\"url3\", status=\"sold\")"
+        },
+        {
+            "test_data_row_variable": "pet4",
+            "code": "pet4 = Pet(id=4, name=\"Max\", category_id=3, photo_urls=\"url4\", status=\"available\")"
+        },
+        {
+            "test_data_row_variable": "category1",
+            "code": "category1 = Category(id=1, name=\"Dogs\")"
+        },
+        {
+            "test_data_row_variable": "category2",
+            "code": "category2 = Category(id=2, name=\"Cats\")"
+        },
+        {
+            "test_data_row_variable": "category3",
+            "code": "category3 = Category(id=3, name=\"Birds\")"
+        },
+        {
+            "test_data_row_variable": "category4",
+            "code": "category4 = Category(id=4, name=\"Fish\")"
+        },
+        {
+            "test_data_row_variable": "tag1",
+            "code": "tag1 = Tag(id=1, name=\"Cute\")"
+        },
+        {
+            "test_data_row_variable": "tag2",
+            "code": "tag2 = Tag(id=2, name=\"Small\")"
+        },
+        {
+            "test_data_row_variable": "tag3",
+            "code": "tag3 = Tag(id=3, name=\"Furry\")"
+        },
+        {
+            "test_data_row_variable": "tag4",
+            "code": "tag4 = Tag(id=4, name=\"Friendly\")"
+        },
+        {
+            "test_data_row_variable": "pet_tag1",
+            "code": "pet_tag1 = PetTag(id=1, pet_id=1, tag_id=1)"
+        },
+        {
+            "test_data_row_variable": "pet_tag2",
+            "code": "pet_tag2 = PetTag(id=2, pet_id=2, tag_id=2)"
+        },
+        {
+            "test_data_row_variable": "pet_tag3",
+            "code": "pet_tag3 = PetTag(id=3, pet_id=3, tag_id=3)"
+        },
+        {
+            "test_data_row_variable": "pet_tag4",
+            "code": "pet_tag4 = PetTag(id=4, pet_id=4, tag_id=4)"
+        },
+        {
+            "test_data_row_variable": "order1",
+            "code": "order1 = Order(id=1, pet_id=1, quantity=2, ship_date=date(2023, 10, 10), status=\"placed\", complete=True)"
+        },
+        {
+            "test_data_row_variable": "order2",
+            "code": "order2 = Order(id=2, pet_id=3, quantity=1, ship_date=date(2023, 10, 12), status=\"approved\", complete=False)"
+        },
+        {
+            "test_data_row_variable": "order3",
+            "code": "order3 = Order(id=3, pet_id=2, quantity=4, ship_date=date(2023, 11, 5), status=\"delivered\", complete=True)"
+        },
+        {
+            "test_data_row_variable": "order4",
+            "code": "order4 = Order(id=4, pet_id=4, quantity=3, ship_date=date(2023, 11, 1), status=\"approved\", complete=False)"
+        },
+        {
+            "test_data_row_variable": "customer1",
+            "code": "customer1 = Customer(id=1, username=\"john_doe\", address_id=1)"
+        },
+        {
+            "test_data_row_variable": "customer2",
+            "code": "customer2 = Customer(id=2, username=\"jane_smith\", address_id=2)"
+        },
+        {
+            "test_data_row_variable": "customer3",
+            "code": "customer3 = Customer(id=3, username=\"jim_brown\", address_id=3)"
+        },
+        {
+            "test_data_row_variable": "customer4",
+            "code": "customer4 = Customer(id=4, username=\"lisa_white\", address_id=4)"
+        },
+        {
+            "test_data_row_variable": "address1",
+            "code": "address1 = Address(id=1, street=\"437 Lytton\", city=\"Palo Alto\", state=\"CA\", zip=\"94301\")"
+        },
+        {
+            "test_data_row_variable": "address2",
+            "code": "address2 = Address(id=2, street=\"123 Main St\", city=\"San Francisco\", state=\"CA\", zip=\"94105\")"
+        },
+        {
+            "test_data_row_variable": "address3",
+            "code": "address3 = Address(id=3, street=\"789 Elm St\", city=\"Los Angeles\", state=\"CA\", zip=\"90001\")"
+        },
+        {
+            "test_data_row_variable": "address4",
+            "code": "address4 = Address(id=4, street=\"456 Oak St\", city=\"San Jose\", state=\"CA\", zip=\"95112\")"
+        },
+        {
+            "test_data_row_variable": "user1",
+            "code": "user1 = User(id=1, username=\"theUser\", first_name=\"John\", last_name=\"James\", email=\"john@email.com\", password=\"12345\", phone=\"1234567890\", user_status=1)"
+        },
+        {
+            "test_data_row_variable": "user2",
+            "code": "user2 = User(id=2, username=\"admin\", first_name=\"Admin\", last_name=\"User\", email=\"admin@email.com\", password=\"admin\", phone=\"0987654321\", user_status=2)"
+        },
+        {
+            "test_data_row_variable": "user3",
+            "code": "user3 = User(id=3, username=\"guest\", first_name=\"Guest\", last_name=\"User\", email=\"guest@email.com\", password=\"guest\", phone=\"1122334455\", user_status=0)"
+        },
+        {
+            "test_data_row_variable": "user4",
+            "code": "user4 = User(id=4, username=\"superuser\", first_name=\"Super\", last_name=\"User\", email=\"superuser@email.com\", password=\"super\", phone=\"1231231234\", user_status=3)"
+        },
+        {
+            "test_data_row_variable": "inventory1",
+            "code": "inventory1 = Inventory(id=1, status=\"available\", quantity=50)"
+        },
+        {
+            "test_data_row_variable": "inventory2",
+            "code": "inventory2 = Inventory(id=2, status=\"pending\", quantity=20)"
+        },
+        {
+            "test_data_row_variable": "inventory3",
+            "code": "inventory3 = Inventory(id=3, status=\"sold\", quantity=30)"
+        },
+        {
+            "test_data_row_variable": "inventory4",
+            "code": "inventory4 = Inventory(id=4, status=\"available\", quantity=15)"
+        }
+    ],
+    "test_data_sqlite": "INSERT INTO pet (id, name, category_id, photo_urls, status) VALUES (1, \"Buddy\", 1, \"url1\", \"available\");\nINSERT INTO pet (id, name, category_id, photo_urls, status) VALUES (2, \"Kitty\", 2, \"url2\", \"pending\");\nINSERT INTO pet (id, name, category_id, photo_urls, status) VALUES (3, \"Bruno\", 1, \"url3\", \"sold\");\nINSERT INTO pet (id, name, category_id, photo_urls, status) VALUES (4, \"Max\", 3, \"url4\", \"available\");\n\nINSERT INTO category (id, name) VALUES (1, \"Dogs\");\nINSERT INTO category (id, name) VALUES (2, \"Cats\");\nINSERT INTO category (id, name) VALUES (3, \"Birds\");\nINSERT INTO category (id, name) VALUES (4, \"Fish\");\n\nINSERT INTO tag (id, name) VALUES (1, \"Cute\");\nINSERT INTO tag (id, name) VALUES (2, \"Small\");\nINSERT INTO tag (id, name) VALUES (3, \"Furry\");\nINSERT INTO tag (id, name) VALUES (4, \"Friendly\");\n\nINSERT INTO pet_tag (id, pet_id, tag_id) VALUES (1, 1, 1);\nINSERT INTO pet_tag (id, pet_id, tag_id) VALUES (2, 2, 2);\nINSERT INTO pet_tag (id, pet_id, tag_id) VALUES (3, 3, 3);\nINSERT INTO pet_tag (id, pet_id, tag_id) VALUES (4, 4, 4);\n\nINSERT INTO \"order\" (id, pet_id, quantity, ship_date, status, complete) VALUES (1, 1, 2, '2023-10-10', \"placed\", 1);\nINSERT INTO \"order\" (id, pet_id, quantity, ship_date, status, complete) VALUES (2, 3, 1, '2023-10-12', \"approved\", 0);\nINSERT INTO \"order\" (id, pet_id, quantity, ship_date, status, complete) VALUES (3, 2, 4, '2023-11-05', \"delivered\", 1);\nINSERT INTO \"order\" (id, pet_id, quantity, ship_date, status, complete) VALUES (4, 4, 3, '2023-11-01', \"approved\", 0);\n\nINSERT INTO customer (id, username, address_id) VALUES (1, \"john_doe\", 1);\nINSERT INTO customer (id, username, address_id) VALUES (2, \"jane_smith\", 2);\nINSERT INTO customer (id, username, address_id) VALUES (3, \"jim_brown\", 3);\nINSERT INTO customer (id, username, address_id) VALUES (4, \"lisa_white\", 4);\n\nINSERT INTO address (id, street, city, state, zip) VALUES (1, \"437 Lytton\", \"Palo Alto\", \"CA\", \"94301\");\nINSERT INTO address (id, street, city, state, zip) VALUES (2, \"123 Main St\", \"San Francisco\", \"CA\", \"94105\");\nINSERT INTO address (id, street, city, state, zip) VALUES (3, \"789 Elm St\", \"Los Angeles\", \"CA\", \"90001\");\nINSERT INTO address (id, street, city, state, zip) VALUES (4, \"456 Oak St\", \"San Jose\", \"CA\", \"95112\");\n\nINSERT INTO user (id, username, first_name, last_name, email, password, phone, user_status) VALUES (1, \"theUser\", \"John\", \"James\", \"john@email.com\", \"12345\", \"1234567890\", 1);\nINSERT INTO user (id, username, first_name, last_name, email, password, phone, user_status) VALUES (2, \"admin\", \"Admin\", \"User\", \"admin@email.com\", \"admin\", \"0987654321\", 2);\nINSERT INTO user (id, username, first_name, last_name, email, password, phone, user_status) VALUES (3, \"guest\", \"Guest\", \"User\", \"guest@email.com\", \"guest\", \"1122334455\", 0);\nINSERT INTO user (id, username, first_name, last_name, email, password, phone, user_status) VALUES (4, \"superuser\", \"Super\", \"User\", \"superuser@email.com\", \"super\", \"1231231234\", 3);\n\nINSERT INTO inventory (id, status, quantity) VALUES (1, \"available\", 50);\nINSERT INTO inventory (id, status, quantity) VALUES (2, \"pending\", 20);\nINSERT INTO inventory (id, status, quantity) VALUES (3, \"sold\", 30);\nINSERT INTO inventory (id, status, quantity) VALUES (4, \"available\", 15);",
+    "name": "PetStoreModel"
+}

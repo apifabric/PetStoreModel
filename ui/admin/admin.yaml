@@ -1,0 +1,220 @@
+about:
+  date: December 06, 2024 19:31:55
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 5
+  number_tables: 9
+info_toggle_checked: true
+resources:
+  Address:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: street
+    - name: city
+    - name: state
+    - name: zip
+    description: Customer addresses
+    info_list: Customer addresses
+    tab_groups:
+    - direction: tomany
+      fks:
+      - address_id
+      name: CustomerList
+      resource: Customer
+    type: Address
+    user_key: id
+  Category:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: id
+    description: Categories to which pets belong
+    info_list: Categories to which pets belong
+    tab_groups:
+    - direction: tomany
+      fks:
+      - category_id
+      name: PetList
+      resource: Pet
+    type: Category
+    user_key: name
+  Customer:
+    attributes:
+    - label: ' username*'
+      name: username
+      search: true
+      sort: true
+    - name: address_id
+    - name: id
+    description: Customers who purchase pets
+    info_list: Customers who purchase pets
+    tab_groups:
+    - direction: toone
+      fks:
+      - address_id
+      name: address
+      resource: Address
+    type: Customer
+    user_key: username
+  Inventory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: status
+    - name: quantity
+    description: Inventory with quantities by status
+    info_list: Inventory with quantities by status
+    type: Inventory
+    user_key: id
+  Order:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: pet_id
+    - name: quantity
+    - name: ship_date
+      type: DATETIME
+    - name: status
+    - name: complete
+      type: Boolean
+    description: Orders placed in the store
+    info_list: Orders placed in the store
+    tab_groups:
+    - direction: toone
+      fks:
+      - pet_id
+      name: pet
+      resource: Pet
+    type: Order
+    user_key: id
+  Pet:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: category_id
+    - name: photo_urls
+    - name: status
+    - name: id
+    description: Stores pets available in the store
+    info_list: Stores pets available in the store
+    tab_groups:
+    - direction: tomany
+      fks:
+      - pet_id
+      name: OrderList
+      resource: Order
+    - direction: tomany
+      fks:
+      - pet_id
+      name: PetTagList
+      resource: PetTag
+    - direction: toone
+      fks:
+      - category_id
+      name: category
+      resource: Category
+    type: Pet
+    user_key: name
+  PetTag:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: pet_id
+    - name: tag_id
+    description: Association table for pets and tags
+    info_list: Association table for pets and tags
+    tab_groups:
+    - direction: toone
+      fks:
+      - pet_id
+      name: pet
+      resource: Pet
+    - direction: toone
+      fks:
+      - tag_id
+      name: tag
+      resource: Tag
+    type: PetTag
+    user_key: id
+  Tag:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: id
+    description: Tags associated with pets
+    info_list: Tags associated with pets
+    tab_groups:
+    - direction: tomany
+      fks:
+      - tag_id
+      name: PetTagList
+      resource: PetTag
+    type: Tag
+    user_key: name
+  User:
+    attributes:
+    - label: ' username*'
+      name: username
+      search: true
+      sort: true
+    - name: first_name
+    - name: last_name
+    - name: email
+    - name: phone
+    - name: user_status
+    - name: id
+    - name: password
+    description: Users who can perform operations
+    info_list: Users who can perform operations
+    type: User
+    user_key: username
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'
